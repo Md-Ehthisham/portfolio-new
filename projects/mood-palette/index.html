@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mood Palette — Generate Colors by Feeling</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg: #0a0a0f;
+      --surface: #111118;
+      --border: rgba(255,255,255,0.08);
+      --text: #eeecea;
+      --muted: #888;
+      --accent: #818cf8;
+      --accent2: #67e8f9;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Space Grotesk', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 3rem 1.5rem;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+
+    h1 {
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      margin-bottom: 0.75rem;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .subtitle {
+      color: var(--muted);
+      font-size: 1rem;
+      line-height: 1.6;
+      max-width: 500px;
+    }
+
+    .input-area {
+      display: flex;
+      gap: 0.75rem;
+      margin-bottom: 2rem;
+      width: 100%;
+      max-width: 520px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .mood-input {
+      flex: 1;
+      min-width: 240px;
+      padding: 0.9rem 1.4rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      color: var(--text);
+      font-family: inherit;
+      font-size: 0.95rem;
+      outline: none;
+      transition: border-color 0.3s;
+    }
+
+    .mood-input::placeholder { color: rgba(255,255,255,0.25); }
+    .mood-input:focus { border-color: var(--accent); }
+
+    .generate-btn {
+      padding: 0.9rem 2rem;
+      background: var(--accent);
+      color: #0a0a0f;
+      border: none;
+      border-radius: 12px;
+      font-family: inherit;
+      font-size: 0.9rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      cursor: pointer;
+      transition: all 0.25s;
+    }
+
+    .generate-btn:hover {
+      background: #a5b4fc;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(129,140,248,0.3);
+    }
+
+    .mood-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      justify-content: center;
+      margin-bottom: 3rem;
+      max-width: 600px;
+    }
+
+    .mood-tag {
+      padding: 0.4rem 1rem;
+      border: 1px solid var(--border);
+      border-radius: 100px;
+      font-size: 0.78rem;
+      color: var(--muted);
+      cursor: pointer;
+      transition: all 0.25s;
+      background: transparent;
+      font-family: inherit;
+    }
+
+    .mood-tag:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+      background: rgba(129,140,248,0.08);
+    }
+
+    .palette-container {
+      width: 100%;
+      max-width: 700px;
+      min-height: 300px;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .palette-label {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.72rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--muted);
+      text-align: center;
+    }
+
+    .palette-row {
+      display: flex;
+      border-radius: 16px;
+      overflow: hidden;
+      height: 180px;
+      box-shadow: 0 16px 48px rgba(0,0,0,0.4);
+      animation: fadeUp 0.5s ease-out;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .color-swatch {
+      flex: 1;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      padding-bottom: 1rem;
+      cursor: pointer;
+      transition: flex 0.3s ease;
+      position: relative;
+    }
+
+    .color-swatch:hover {
+      flex: 1.5;
+    }
+
+    .color-hex {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.72rem;
+      letter-spacing: 0.08em;
+      padding: 0.3rem 0.7rem;
+      border-radius: 6px;
+      background: rgba(0,0,0,0.35);
+      backdrop-filter: blur(8px);
+      color: #fff;
+      opacity: 0;
+      transform: translateY(6px);
+      transition: all 0.25s;
+    }
+
+    .color-swatch:hover .color-hex {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .copied-toast {
+      position: fixed;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      background: var(--accent);
+      color: #0a0a0f;
+      padding: 0.6rem 1.4rem;
+      border-radius: 100px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      opacity: 0;
+      transition: all 0.3s;
+      pointer-events: none;
+      z-index: 100;
+    }
+
+    .copied-toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    .palette-info {
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .palette-name {
+      font-weight: 600;
+      font-size: 1.1rem;
+    }
+
+    .palette-mood {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--accent2);
+      letter-spacing: 0.08em;
+    }
+
+    .empty-state {
+      text-align: center;
+      color: rgba(255,255,255,0.15);
+      font-size: 1.1rem;
+      padding: 4rem 0;
+    }
+
+    .empty-state span {
+      font-size: 3rem;
+      display: block;
+      margin-bottom: 1rem;
+    }
+
+    footer {
+      margin-top: auto;
+      padding-top: 3rem;
+      text-align: center;
+      color: rgba(255,255,255,0.2);
+      font-size: 0.75rem;
+      letter-spacing: 0.08em;
+    }
+
+    footer a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    @media (max-width: 500px) {
+      .palette-row { height: 140px; border-radius: 12px; }
+      .color-hex { font-size: 0.6rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>Mood Palette</h1>
+    <p class="subtitle">Type a mood or feeling — get a matching color palette instantly. Click any color to copy its hex code.</p>
+  </header>
+
+  <div class="input-area">
+    <input type="text" class="mood-input" id="moodInput" placeholder="Type a mood... (happy, calm, dark...)" autofocus>
+    <button class="generate-btn" id="generateBtn">Generate</button>
+  </div>
+
+  <div class="mood-tags" id="moodTags">
+    <button class="mood-tag" data-mood="happy">☀️ Happy</button>
+    <button class="mood-tag" data-mood="calm">🌊 Calm</button>
+    <button class="mood-tag" data-mood="dark">🌑 Dark</button>
+    <button class="mood-tag" data-mood="energetic">⚡ Energetic</button>
+    <button class="mood-tag" data-mood="romantic">💕 Romantic</button>
+    <button class="mood-tag" data-mood="nature">🌿 Nature</button>
+    <button class="mood-tag" data-mood="retro">📼 Retro</button>
+    <button class="mood-tag" data-mood="ocean">🐳 Ocean</button>
+    <button class="mood-tag" data-mood="sunset">🌅 Sunset</button>
+    <button class="mood-tag" data-mood="minimal">⬜ Minimal</button>
+    <button class="mood-tag" data-mood="cyberpunk">🤖 Cyberpunk</button>
+    <button class="mood-tag" data-mood="cozy">☕ Cozy</button>
+  </div>
+
+  <div class="palette-container" id="paletteContainer">
+    <div class="empty-state">
+      <span>🎨</span>
+      Pick a mood to generate your palette
+    </div>
+  </div>
+
+  <div class="copied-toast" id="toast">Copied!</div>
+
+  <footer>
+    Built by <a href="../index.html">MEH.A</a> — Mood Palette Generator
+  </footer>
+
+  <script>
+    const moodPalettes = {
+      happy: [
+        { name: 'Sunshine Burst', colors: ['#FFD93D', '#FF6B6B', '#4ECDC4', '#1A535C', '#F7FFF7'] },
+        { name: 'Joy Ride', colors: ['#FFC145', '#FF6F61', '#5CCCCC', '#2C3E50', '#ECF0F1'] },
+        { name: 'Cheerful Dawn', colors: ['#FFBE76', '#FF7979', '#BADC58', '#6AB04C', '#FFF3E0'] },
+      ],
+      calm: [
+        { name: 'Tranquil Waters', colors: ['#A8DADC', '#457B9D', '#1D3557', '#F1FAEE', '#E8E8E4'] },
+        { name: 'Zen Garden', colors: ['#B5C7A3', '#8FA67D', '#6B8F5B', '#E8DCC8', '#F5F0E8'] },
+        { name: 'Soft Morning', colors: ['#C4D7E0', '#9BB5C4', '#7096A8', '#E8D5C4', '#FAF5F0'] },
+      ],
+      dark: [
+        { name: 'Midnight Void', colors: ['#0D0D0D', '#1A1A2E', '#16213E', '#0F3460', '#533483'] },
+        { name: 'Shadow Realm', colors: ['#0B0B0B', '#1B1B2F', '#2D132C', '#462255', '#1A1A2E'] },
+        { name: 'Deep Abyss', colors: ['#0A0A0F', '#12121A', '#1E1E2E', '#2A2A3A', '#363646'] },
+      ],
+      energetic: [
+        { name: 'Electric Pulse', colors: ['#FF006E', '#FB5607', '#FFBE0B', '#3A86FF', '#8338EC'] },
+        { name: 'Neon Rush', colors: ['#FF0055', '#FF6600', '#FFCC00', '#00CC99', '#6633FF'] },
+        { name: 'Power Surge', colors: ['#E63946', '#F4A261', '#E9C46A', '#2A9D8F', '#264653'] },
+      ],
+      romantic: [
+        { name: 'Rose Petal', colors: ['#FF6B6B', '#EE5A6F', '#CC4466', '#F7CAD0', '#FFF0F3'] },
+        { name: 'Love Letter', colors: ['#E8557A', '#D4426C', '#A83B5C', '#F5C5D0', '#FDE8EE'] },
+        { name: 'Blush Kiss', colors: ['#FF85A1', '#FF4D6D', '#C9184A', '#FFB3C6', '#FFF0F5'] },
+      ],
+      nature: [
+        { name: 'Forest Floor', colors: ['#2D6A4F', '#40916C', '#52B788', '#95D5B2', '#D8F3DC'] },
+        { name: 'Earth Tones', colors: ['#5F4B3A', '#7D6B5D', '#A3917F', '#C9B99A', '#E8DCC8'] },
+        { name: 'Wild Meadow', colors: ['#386641', '#6A994E', '#A7C957', '#F2E8CF', '#BC4749'] },
+      ],
+      retro: [
+        { name: 'Vintage Fade', colors: ['#E3B23C', '#A37B4F', '#6E4B3A', '#D4A574', '#F2E2C4'] },
+        { name: '70s Groove', colors: ['#DB7C26', '#D8572A', '#C32F27', '#780116', '#F7B267'] },
+        { name: 'Old Film', colors: ['#8B6914', '#A67B3E', '#C4975A', '#DDB87C', '#F5DEB3'] },
+      ],
+      ocean: [
+        { name: 'Deep Blue', colors: ['#03045E', '#023E8A', '#0077B6', '#0096C7', '#48CAE4'] },
+        { name: 'Coral Reef', colors: ['#005F73', '#0A9396', '#94D2BD', '#E9D8A6', '#EE9B00'] },
+        { name: 'Tidal Wave', colors: ['#0B132B', '#1C2541', '#3A506B', '#5BC0BE', '#6FFFE9'] },
+      ],
+      sunset: [
+        { name: 'Golden Hour', colors: ['#FF6B35', '#F7C59F', '#EFEFD0', '#004E89', '#1A659E'] },
+        { name: 'Dusk Glow', colors: ['#FF595E', '#FF924C', '#FFCA3A', '#8AC926', '#1982C4'] },
+        { name: 'Horizon Fire', colors: ['#D62828', '#F77F00', '#FCBF49', '#EAE2B7', '#003049'] },
+      ],
+      minimal: [
+        { name: 'Pure Clean', colors: ['#FFFFFF', '#F5F5F5', '#E0E0E0', '#BDBDBD', '#212121'] },
+        { name: 'Paper & Ink', colors: ['#FAFAFA', '#EEEEEE', '#CCCCCC', '#666666', '#111111'] },
+        { name: 'Soft Grey', colors: ['#F8F9FA', '#E9ECEF', '#DEE2E6', '#ADB5BD', '#343A40'] },
+      ],
+      cyberpunk: [
+        { name: 'Neon Grid', colors: ['#0D0221', '#0A0A23', '#FF00FF', '#00FFFF', '#FFD700'] },
+        { name: 'Synth Wave', colors: ['#120458', '#7B2D8E', '#F72585', '#4CC9F0', '#4361EE'] },
+        { name: 'Hacker Mode', colors: ['#0A0A0A', '#0D1117', '#00FF41', '#39FF14', '#1A1A2E'] },
+      ],
+      cozy: [
+        { name: 'Warm Blanket', colors: ['#8B4513', '#A0522D', '#CD853F', '#DEB887', '#FAF0E6'] },
+        { name: 'Autumn Cabin', colors: ['#6B3A2A', '#8B5E3C', '#C19A6B', '#E8C89E', '#FFF5EB'] },
+        { name: 'Candlelight', colors: ['#704214', '#A0612E', '#CC8844', '#E8BB7F', '#FFF8F0'] },
+      ],
+    };
+
+    // Fallback random palette for unknown moods
+    function generateRandomPalette(mood) {
+      const hueBase = hashString(mood) % 360;
+      const colors = [];
+      for (let i = 0; i < 5; i++) {
+        const h = (hueBase + i * 42) % 360;
+        const s = 50 + (i * 8);
+        const l = 25 + (i * 14);
+        colors.push(hslToHex(h, Math.min(s, 90), Math.min(l, 85)));
+      }
+      return { name: `${capitalize(mood)} Vibes`, colors };
+    }
+
+    function hashString(str) {
+      let hash = 0;
+      for (let i = 0; i < str.length; i++) {
+        hash = str.charCodeAt(i) + ((hash << 5) - hash);
+      }
+      return Math.abs(hash);
+    }
+
+    function hslToHex(h, s, l) {
+      l /= 100; s /= 100;
+      const a = s * Math.min(l, 1 - l);
+      const f = n => {
+        const k = (n + h / 30) % 12;
+        const color = l - a * Math.max(Math.min(k - 3, 9 - k, 1), -1);
+        return Math.round(255 * color).toString(16).padStart(2, '0');
+      };
+      return `#${f(0)}${f(8)}${f(4)}`.toUpperCase();
+    }
+
+    function capitalize(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
+
+    const input = document.getElementById('moodInput');
+    const btn = document.getElementById('generateBtn');
+    const container = document.getElementById('paletteContainer');
+    const toast = document.getElementById('toast');
+
+    function generatePalette(mood) {
+      mood = mood.toLowerCase().trim();
+      if (!mood) return;
+
+      input.value = mood;
+
+      let palette;
+      if (moodPalettes[mood]) {
+        const options = moodPalettes[mood];
+        palette = options[Math.floor(Math.random() * options.length)];
+      } else {
+        palette = generateRandomPalette(mood);
+      }
+
+      container.innerHTML = `
+        <div class="palette-info">
+          <span class="palette-name">${palette.name}</span>
+          <span class="palette-mood">${mood.toUpperCase()}</span>
+        </div>
+        <div class="palette-row">
+          ${palette.colors.map(c => `
+            <div class="color-swatch" style="background:${c}" onclick="copyColor('${c}')" title="Click to copy ${c}">
+              <span class="color-hex">${c}</span>
+            </div>
+          `).join('')}
+        </div>
+        <p class="palette-label">Click any color to copy • Generate again for variations</p>
+      `;
+    }
+
+    function copyColor(hex) {
+      navigator.clipboard.writeText(hex).then(() => {
+        toast.textContent = `Copied ${hex}`;
+        toast.classList.add('show');
+        setTimeout(() => toast.classList.remove('show'), 1500);
+      });
+    }
+
+    btn.addEventListener('click', () => generatePalette(input.value));
+    input.addEventListener('keydown', e => { if (e.key === 'Enter') generatePalette(input.value); });
+
+    document.querySelectorAll('.mood-tag').forEach(tag => {
+      tag.addEventListener('click', () => generatePalette(tag.dataset.mood));
+    });
+  </script>
+</body>
+</html>
