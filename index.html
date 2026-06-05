@@ -1410,6 +1410,248 @@
       z-index: 2;
     }
 
+    /* ===== PROJECTS SHOWCASE ===== */
+    #projects {
+      padding: clamp(5rem, 10vw, 10rem) clamp(1.5rem, 5vw, 4rem);
+      background: var(--paper);
+      position: relative;
+    }
+
+    .showcase-inner {
+      max-width: var(--w);
+      margin: 0 auto;
+    }
+
+    .showcase-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-bottom: clamp(3rem, 5vw, 5rem);
+      gap: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .showcase-heading {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 700;
+      font-size: clamp(2.5rem, 5vw, 5rem);
+      letter-spacing: -0.02em;
+      line-height: 0.95;
+    }
+
+    .showcase-heading span {
+      color: var(--accent);
+    }
+
+    .showcase-sub {
+      font-size: 0.9rem;
+      color: var(--muted);
+      max-width: 320px;
+      line-height: 1.8;
+    }
+
+    .showcase-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+      gap: 2rem;
+    }
+
+    .showcase-card {
+      background: var(--warm);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+      transition: all 0.35s cubic-bezier(0.25, 1, 0.5, 1);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .showcase-card:hover {
+      transform: translateY(-10px);
+      box-shadow: var(--shadow-lg);
+      border-color: rgba(99, 102, 241, 0.2);
+    }
+
+    .showcase-img-wrap {
+      aspect-ratio: 16 / 9;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .showcase-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: top center;
+      display: block;
+      transition: transform 0.4s ease;
+    }
+
+    .showcase-card:hover .showcase-img {
+      transform: scale(1.04);
+    }
+
+
+
+    .showcase-badge {
+      position: absolute;
+      top: 0.75rem;
+      left: 0.75rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.3rem 0.8rem;
+      border-radius: 100px;
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      background: var(--accent);
+      color: #fff;
+      z-index: 2;
+    }
+
+    .showcase-badge::before {
+      content: '';
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: #fff;
+      animation: livepulse 1.5s ease-in-out infinite;
+    }
+
+    .showcase-body {
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+    }
+
+    .showcase-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 700;
+      font-size: 1.25rem;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.5rem;
+      color: var(--ink);
+    }
+
+    .showcase-desc {
+      font-size: 0.85rem;
+      color: var(--muted);
+      line-height: 1.7;
+      margin-bottom: 1.25rem;
+    }
+
+    .showcase-tech {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .showcase-tech span {
+      font-size: 0.68rem;
+      padding: 0.2rem 0.6rem;
+      border: 1px solid var(--border);
+      border-radius: 100px;
+      color: var(--muted);
+      letter-spacing: 0.04em;
+    }
+
+    .showcase-actions {
+      display: flex;
+      gap: 0.75rem;
+      margin-top: auto;
+    }
+
+    .showcase-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.6rem 1.2rem;
+      border-radius: 10px;
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 0.78rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.25s;
+      letter-spacing: 0.03em;
+      cursor: pointer;
+    }
+
+    .showcase-btn.primary {
+      background: var(--ink);
+      color: var(--paper);
+      border: 1px solid var(--ink);
+    }
+
+    .showcase-btn.primary:hover {
+      background: var(--accent);
+      border-color: var(--accent);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(99, 102, 241, 0.25);
+    }
+
+    .showcase-btn.secondary {
+      background: transparent;
+      color: var(--ink);
+      border: 1px solid var(--border);
+    }
+
+    .showcase-btn.secondary:hover {
+      border-color: var(--ink);
+      background: var(--warm);
+      transform: translateY(-2px);
+    }
+
+    /* Dark mode showcase overrides */
+    .dark-mode #projects {
+      background: var(--paper);
+    }
+
+    .dark-mode .showcase-card {
+      background: var(--warm);
+      border-color: rgba(255, 255, 255, 0.06);
+    }
+
+    .dark-mode .showcase-card:hover {
+      border-color: rgba(129, 140, 248, 0.2);
+      background: #1a1a24;
+    }
+
+    .dark-mode .showcase-title {
+      color: #eeecea;
+    }
+
+    .dark-mode .showcase-btn.primary {
+      background: #818cf8;
+      color: #0a0a0f;
+      border-color: #818cf8;
+    }
+
+    .dark-mode .showcase-btn.primary:hover {
+      background: #a5b4fc;
+      border-color: #a5b4fc;
+    }
+
+    .dark-mode .showcase-btn.secondary {
+      color: rgba(255, 255, 255, 0.7);
+      border-color: rgba(255, 255, 255, 0.1);
+    }
+
+    .dark-mode .showcase-btn.secondary:hover {
+      border-color: rgba(255, 255, 255, 0.25);
+      color: #fff;
+      background: rgba(255, 255, 255, 0.06);
+    }
+
+    @media(max-width: 500px) {
+      .showcase-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
     /* ===== JOURNEY ===== */
     #journey {
       background: var(--cream);
@@ -1979,74 +2221,57 @@
     </div>
   </section>
 
-  <!-- PROJECTS -->
-  <!-- <section id="projects">
-    <div class="projects-inner">
-      <div class="projects-header">
-        <h2 class="projects-heading reveal">Selected<br>Projects</h2>
-        <span class="proj-count reveal d2">05 works</span>
+  <!-- PROJECTS SHOWCASE -->
+  <section id="projects">
+    <div class="showcase-inner">
+      <div class="showcase-header">
+        <h2 class="showcase-heading reveal">My<br><span>Projects</span></h2>
+        <p class="showcase-sub reveal d2">Real projects I've built — each one a step forward in my learning journey.</p>
       </div>
-      <div class="proj-grid reveal"> -->
-        <!-- Row 1: featured wide + small -->
-        <!-- <div class="proj-row three">
-          <div class="proj-card">
-            <div class="proj-num"><span>01 / Featured</span>
-              <div class="proj-arrow">↗</div>
-            </div>
-            <span class="proj-emoji">🏥</span>
-            <h3 class="proj-title">AI Disease Prediction System</h3>
-            <p class="proj-desc">End-to-end ML pipeline with 95%+ accuracy on clinical datasets. Ensemble XGBoost +
-              Random Forest with a Streamlit web interface for real-time diagnosis support.</p>
-            <div class="proj-tech">
-              <span>Python</span><span>XGBoost</span><span>Scikit-learn</span><span>Streamlit</span><span>Flask</span>
-            </div>
+      <div class="showcase-grid">
+
+        <!-- Portfolio Card -->
+        <div class="showcase-card reveal">
+          <div class="showcase-img-wrap">
+            <span class="showcase-badge">Live</span>
+            <img src="public/portfolio-preview.png" alt="Personal Portfolio Preview" class="showcase-img">
           </div>
-          <div class="proj-card">
-            <div class="proj-num"><span>02</span>
-              <div class="proj-arrow">↗</div>
+          <div class="showcase-body">
+            <h3 class="showcase-title">Personal Portfolio</h3>
+            <p class="showcase-desc">A modern, responsive portfolio website with dark mode, neural network canvas animation, smooth scroll reveals, and a premium design aesthetic.</p>
+            <div class="showcase-tech">
+              <span>HTML</span><span>CSS</span><span>JavaScript</span>
             </div>
-            <span class="proj-emoji">💬</span>
-            <h3 class="proj-title">BERT Sentiment Engine</h3>
-            <p class="proj-desc">Fine-tuned BERT transformer for multilingual social media sentiment classification with
-              91% accuracy.</p>
-            <div class="proj-tech"><span>BERT</span><span>HuggingFace</span><span>PyTorch</span></div>
-          </div>
-          <div class="proj-card">
-            <div class="proj-num"><span>03</span>
-              <div class="proj-arrow">↗</div>
+            <div class="showcase-actions">
+              <a href="https://ehthishamportfolio.vercel.app/" target="_blank" class="showcase-btn primary">Visit Site ↗</a>
+              <a href="https://github.com/Md-Ehthisham/portfolio-new" target="_blank" class="showcase-btn secondary">⌥ GitHub</a>
             </div>
-            <span class="proj-emoji">👁️</span>
-            <h3 class="proj-title">Real-Time Object Detection</h3>
-            <p class="proj-desc">YOLOv8-based vision system for real-time tracking with custom-trained object classes at
-              30+ FPS.</p>
-            <div class="proj-tech"><span>YOLOv8</span><span>OpenCV</span><span>Python</span></div>
-          </div>
-        </div> -->
-        <!-- Row 2 -->
-        <!-- <div class="proj-row two">
-          <a href="projects/mood-palette/index.html" class="proj-card" style="text-decoration:none;color:inherit;">
-            <div class="proj-num"><span>04 / Live</span>
-              <div class="proj-arrow">↗</div>
-            </div>
-            <span class="proj-emoji">🎨</span>
-            <h3 class="proj-title">Mood Palette Generator</h3>
-            <p class="proj-desc">Type a mood or feeling and get a beautiful, matching color palette instantly. Click any swatch to copy its hex code. Built with pure HTML, CSS & JavaScript.</p>
-            <div class="proj-tech"><span>HTML</span><span>CSS</span><span>JavaScript</span></div>
-          </a>
-          <div class="proj-card">
-            <div class="proj-num"><span>05</span>
-              <div class="proj-arrow">↗</div>
-            </div>
-            <span class="proj-emoji">📊</span>
-            <h3 class="proj-title">Predictive Analytics Dashboard</h3>
-            <p class="proj-desc">Interactive real-time dashboard with drill-down analytics, trend forecasting, and
-              anomaly detection on large-scale datasets.</p>
-            <div class="proj-tech"><span>Pandas</span><span>Plotly</span><span>Streamlit</span><span>SQL</span></div>
           </div>
         </div>
+
+        <!-- Add more project cards here -->
+        <!--
+        <div class="showcase-card reveal d1">
+          <div class="showcase-img-wrap">
+            <img src="your-image.png" alt="Project Name" class="showcase-img">
+          </div>
+          <div class="showcase-body">
+            <h3 class="showcase-title">Project Name</h3>
+            <p class="showcase-desc">Project description goes here.</p>
+            <div class="showcase-tech">
+              <span>Tech 1</span><span>Tech 2</span>
+            </div>
+            <div class="showcase-actions">
+              <a href="#" target="_blank" class="showcase-btn primary">Visit Site ↗</a>
+              <a href="#" target="_blank" class="showcase-btn secondary">⌥ GitHub</a>
+            </div>
+          </div>
+        </div>
+        -->
+
       </div>
     </div>
-  </section> -->
+  </section>
 
   <!-- JOURNEY -->
   <section id="journey">
