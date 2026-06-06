@@ -1452,7 +1452,7 @@
 
     .showcase-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+      grid-template-columns: repeat(2, 1fr);
       gap: 2rem;
     }
 
@@ -1518,6 +1518,11 @@
       border-radius: 50%;
       background: #fff;
       animation: livepulse 1.5s ease-in-out infinite;
+    }
+
+    .showcase-badge.dev {
+      background: #f59e0b;
+      color: #1a1a0a;
     }
 
     .showcase-body {
@@ -1646,7 +1651,7 @@
       background: rgba(255, 255, 255, 0.06);
     }
 
-    @media(max-width: 500px) {
+    @media(max-width: 700px) {
       .showcase-grid {
         grid-template-columns: 1fr;
       }
@@ -2249,25 +2254,23 @@
           </div>
         </div>
 
-        <!-- Add more project cards here -->
-        <!--
+        <!-- LLM Fine-Tuning Card -->
         <div class="showcase-card reveal d1">
           <div class="showcase-img-wrap">
-            <img src="your-image.png" alt="Project Name" class="showcase-img">
+            <span class="showcase-badge dev">In Development</span>
+            <img src="public/llm-finetuning.png" alt="LLM Fine-Tuning Project" class="showcase-img">
           </div>
           <div class="showcase-body">
-            <h3 class="showcase-title">Project Name</h3>
-            <p class="showcase-desc">Project description goes here.</p>
+            <h3 class="showcase-title">Local LLM Fine-Tuning</h3>
+            <p class="showcase-desc">Fine-tuning a local large language model on custom datasets to create a domain-specific AI assistant. Experimenting with LoRA adapters, quantization, and prompt engineering techniques.</p>
             <div class="showcase-tech">
-              <span>Tech 1</span><span>Tech 2</span>
+              <span>Python</span><span>Ollama</span><span>LoRA</span><span>Transformers</span>
             </div>
-            <div class="showcase-actions">
-              <a href="#" target="_blank" class="showcase-btn primary">Visit Site ↗</a>
-              <a href="#" target="_blank" class="showcase-btn secondary">⌥ GitHub</a>
-            </div>
+            <!-- <div class="showcase-actions">
+              <a href="https://github.com/Md-Ehthisham" target="_blank" class="showcase-btn secondary">⌥ GitHub</a>
+            </div> -->
           </div>
         </div>
-        -->
 
       </div>
     </div>
@@ -2332,7 +2335,7 @@
           <div class="cl-label"><span class="cl-type">GitHub</span><span class="cl-value">See my code</span></div>
           <span class="cl-icon">⌥</span>
         </a>
-        <a href="#" class="contact-link">
+        <a href="/src/documents/Ehthisham_Resume.pdf" class="contact-link">
           <div class="cl-label"><span class="cl-type">Resume</span><span class="cl-value">Download CV</span></div>
           <span class="cl-icon">↓</span>
         </a>
